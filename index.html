@@ -1,34 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AR 3Dモデル</title>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      overflow: hidden;
-    }
-    model-viewer {
-      width: 100vw;
-      height: 100vh;
-      touch-action: pinch-zoom;
-    }
-    #shutter {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 10px 20px;
-      font-size: 16px;
-      background: white;
-      border: none;
-      border-radius: 10px;
-      z-index: 10;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AR 3Dモデルビューア</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
@@ -40,25 +16,36 @@
   ar-scale="auto"
   camera-controls
   auto-rotate
-  interaction-prompt="auto"
   disable-zoom="false"
-  style="--ar-button-scale: 2;">
+  tone-mapping="neutral"
+  exposure="1"
+  shadow-intensity="1"
+  environment-image="neutral"
+  poster="poster.webp"
+  style="touch-action: pinch-zoom;">
+  
+  <!-- ローディングバー -->
+  <div class="progress-bar hide" slot="progress-bar">
+    <div class="update-bar"></div>
+  </div>
+
+  <!-- カスタムARボタン -->
+  <button slot="ar-button" id="ar-button">
+    View in your space
+  </button>
+
+  <!-- ARプロンプト -->
+  <div id="ar-prompt">
+    <img src="ar_hand_prompt.png" alt="AR手のアイコン" />
+  </div>
 </model-viewer>
 
+<!-- 撮影ボタン -->
 <button id="shutter">📸 撮影</button>
 
-<script>
-  document.getElementById("shutter").addEventListener("click", () => {
-    const viewer = document.querySelector("model-viewer");
-    const canvas = viewer.shadowRoot.querySelector("canvas");
-    const imageData = canvas.toDataURL("image/png");
-
-    const link = document.createElement("a");
-    link.href = imageData;
-    link.download = "snapshot.png";
-    link.click();
-  });
-</script>
+<!-- スクリプト -->
+<script src="script.js"></script>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 </body>
 </html>
