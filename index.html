@@ -1,61 +1,61 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AR 3Dモデルビューワー</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR 3Dモデル</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
     body {
       margin: 0;
+      background: #000;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 100vh;
-      background-color: #000;
     }
     model-viewer {
       width: 100vw;
       height: 100vh;
+      touch-action: pinch-zoom;
     }
     #shutter {
       position: absolute;
       bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       padding: 10px 20px;
-      font-size: 18px;
+      font-size: 16px;
       background: white;
       border: none;
       border-radius: 10px;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
 
-<!-- ARに対応した3Dモデル表示 -->
 <model-viewer
   src="1譛・14, 12_51 蜊亥燕 (1).glb"
+  alt="3Dモデル"
   ar
   ar-modes="scene-viewer webxr quick-look"
+  ar-scale="auto"
   camera-controls
   auto-rotate
-  exposure="1"
+  interaction-prompt="auto"
   disable-zoom="false"
-  style="touch-action: pinch-zoom;">
+  style="--ar-button-scale: 2;">
 </model-viewer>
 
-<!-- 撮影ボタン -->
 <button id="shutter">📸 撮影</button>
 
 <script>
-  document.getElementById("shutter").addEventListener("click", async () => {
-    const canvas = document.querySelector("model-viewer").shadowRoot.querySelector("canvas");
-    const image = canvas.toDataURL("image/png");
-    
+  document.getElementById("shutter").addEventListener("click", () => {
+    const viewer = document.querySelector("model-viewer");
+    const canvas = viewer.shadowRoot.querySelector("canvas");
+    const imageData = canvas.toDataURL("image/png");
+
     const link = document.createElement("a");
+    link.href = imageData;
     link.download = "snapshot.png";
-    link.href = image;
     link.click();
   });
 </script>
