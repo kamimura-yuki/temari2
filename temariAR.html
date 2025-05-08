@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AR 3Dモデルビューワー</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #000;
+    }
+    model-viewer {
+      width: 100vw;
+      height: 100vh;
+    }
+    #shutter {
+      position: absolute;
+      bottom: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: white;
+      border: none;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ARに対応した3Dモデル表示 -->
+<model-viewer
+  src="model.glb"
+  ar
+  ar-modes="scene-viewer webxr quick-look"
+  camera-controls
+  auto-rotate
+  exposure="1"
+  disable-zoom="false"
+  style="touch-action: pinch-zoom;">
+</model-viewer>
+
+<!-- 撮影ボタン -->
+<button id="shutter">📸 撮影</button>
+
+<script>
+  document.getElementById("shutter").addEventListener("click", async () => {
+    const canvas = document.querySelector("model-viewer").shadowRoot.querySelector("canvas");
+    const image = canvas.toDataURL("image/png");
+    
+    const link = document.createElement("a");
+    link.download = "snapshot.png";
+    link.href = image;
+    link.click();
+  });
+</script>
+
+</body>
+</html>
