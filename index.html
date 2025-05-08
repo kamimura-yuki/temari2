@@ -1,51 +1,70 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AR 3Dモデルビューア</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>&lt;model-viewer&gt; template</title>
+    <meta charset="utf-8">
+    <meta name="description" content="&lt;model-viewer&gt; template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" href="./styles.css" rel="stylesheet"/>
+    <style>
+      #shutter {
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        font-size: 16px;
+        background: white;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body>
 
-<model-viewer
-  src="1譛・14, 12_51 蜊亥燕 (1).glb"
-  alt="3Dモデル"
-  ar
-  ar-modes="scene-viewer quick-look webxr"
-  ar-scale="auto"
-  camera-controls
-  auto-rotate
-  disable-zoom="false"
-  tone-mapping="neutral"
-  exposure="1"
-  shadow-intensity="1"
-  environment-image="neutral"
-  poster="poster.webp"
-  style="touch-action: pinch-zoom;">
-  
-  <!-- ローディングバー -->
-  <div class="progress-bar hide" slot="progress-bar">
-    <div class="update-bar"></div>
-  </div>
+    <!-- <model-viewer> HTML element -->
+    <model-viewer src="1譛・14, 12_51 蜊亥燕 (1).glb"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      camera-controls
+      tone-mapping="neutral"
+      poster="poster.webp"
+      shadow-intensity="1">
+      
+      <div class="progress-bar hide" slot="progress-bar">
+          <div class="update-bar"></div>
+      </div>
+      <button slot="ar-button" id="ar-button">
+          View in your space
+      </button>
+      <div id="ar-prompt">
+          <img src="ar_hand_prompt.png">
+      </div>
+    </model-viewer>  
 
-  <!-- カスタムARボタン -->
-  <button slot="ar-button" id="ar-button">
-    View in your space
-  </button>
+    <!-- 撮影ボタン -->
+    <button id="shutter">📸 撮影</button>
 
-  <!-- ARプロンプト -->
-  <div id="ar-prompt">
-    <img src="ar_hand_prompt.png" alt="AR手のアイコン" />
-  </div>
-</model-viewer>
+    <script>
+      // 撮影ボタン処理
+      document.getElementById("shutter").addEventListener("click", () => {
+        const viewer = document.querySelector("model-viewer");
+        const canvas = viewer.shadowRoot?.querySelector("canvas");
+        if (!canvas) {
+          alert("撮影できませんでした。model-viewerが正しく読み込まれているか確認してください。");
+          return;
+        }
+        const imageData = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = imageData;
+        link.download = "snapshot.png";
+        link.click();
+      });
+    </script>
 
-<!-- 撮影ボタン -->
-<button id="shutter">📸 撮影</button>
-
-<!-- スクリプト -->
-<script src="script.js"></script>
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
-
-</body>
+    <!-- Loads <model-viewer> for browsers: -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  </body>
 </html>
